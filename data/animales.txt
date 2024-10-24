@@ -1,0 +1,2 @@
+[{"id":"a4bedf6d-0570-4f3d-bac6-a5cc5ad92a52","nombre":"firulais","edad":5,"especie":"perro","habitat":"terrestre"},
+{"id":"1164f42a-c4ca-42ee-82a2-b2c7b1fc2fd9","nombre":"simba","edad":8,"especie":"león","habitat":"terrestre"}]
