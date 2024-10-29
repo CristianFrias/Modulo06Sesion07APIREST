@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node --watch inndex.js",
+    "test": "npx mocha index.test.js"
   },
   "keywords": [],
   "author": "Cristián Frías",
   "license": "ISC",
   "dependencies": {
     "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^10.7.3"
   }
 }
