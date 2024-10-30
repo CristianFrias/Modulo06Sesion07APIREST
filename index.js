@@ -4,14 +4,14 @@ const http = require("http"); // MÓDULO NATIVO DE NODE
 const url = require("url") // MÓDULO NATIVO DE NODE
 const { v4: uuidv4 } = require('uuid');
 const { readFileSync, writeFileSync } = require("fs"); // MÓDULO NATIVO DE NODE, SE UTILIZA PARA TRABAJAR EN LA PERSISTENCIA
-const { sourceMapsEnabled } = require("process");
 const puerto = 3_000;   
 
 // UBICACIÓN DEL ARCHIVO DE PERSISTENCIA
 const dataAnimales = `${__dirname}/data/animales.txt`
 
 // USAMOS EL MODULO HTTP CON LA FUNCION CREATESERVER
-http.createServer((req, res) => {
+// ALMACENANDO TODO EL MODULO EN UNA CONSTANTE PARA REALIZAR LAS PRUEBA UNITARIAS
+const servidor = http.createServer((req, res) => { // PRÁCTICA DE CONSOLIDACIÓN QUE ESTÉ DEFINIDO
     // CON ESTAS 3 LINEAS PODEMOS SABER QUE METODO Y QUE PATH NOS ESTÁN LLAMANDO
     const metodo = req.method;
     const urlParsed = url.parse(req.url, true)
@@ -20,10 +20,10 @@ http.createServer((req, res) => {
     // console.log({ urlParsed });
     // PATH DE ANIMALES, GET, POST, PUT, DELETE
     if (pathName == "/animales") {
-        if (metodo == "GET") { // ESTE PARAMETRO RECIBE DESDE LA URL 
+        if (metodo == "GET") { // ESTE PARAMETRO RECIBE DESDE LA URL... EL --GET-- ES PARA EL LISTADO
             res.setHeader("Content-Type", "application/json");
             const parametros = urlParsed.query;
-            console.log(parametros);
+            // console.log(parametros);
             const contentString = readFileSync(dataAnimales, "utf-8");
             let contentJS = JSON.parse(contentString);
             contentJS = contentJS.filter( animal => {
@@ -40,8 +40,7 @@ http.createServer((req, res) => {
             })
             // console.log(parametros.especie);
             res.end(JSON.stringify({message: "Listado de Animales", data: contentJS}));
-        } else if (metodo == "POST") { // PARAMETRO ES RECIBIDO DEL BODY
-
+        } else if (metodo == "POST") { // PARAMETRO ES RECIBIDO DEL BODY...  EL --POST-- ES PARA REGISTRAR
             // RECEPCIÓN DEL BODY QUE ARMA LA DATA QUE RECIBIMOS
             let body = ""; // SE CREA UN BODY TIPO STRING
             // RECIBE TODA LA DATA QUE ESTÁN ENVIANDO
@@ -89,7 +88,7 @@ http.createServer((req, res) => {
                 res.end(JSON.stringify({message: "Registro exitoso", data: animal}));
                 // res.end("Registro de Animales")
             })
-        } else if (metodo == "PUT") { // PARAMETRO ES RECIBIDO DEL BODY
+        } else if (metodo == "PUT") { // PARAMETRO ES RECIBIDO DEL BODY...  EL --PUT-- ES PARA EDITAR
             res.setHeader("Content-Type", "application/json");
             let body = "";
             req.on("data", (parte) => { 
@@ -119,7 +118,7 @@ http.createServer((req, res) => {
                 res.writeHead(404);
                 return res.end(JSON.stringify({message: "ID de animal no encontrado"}))
             })
-        } else if (metodo == "DELETE") {
+        } else if (metodo == "DELETE") { //...  EL --DELETE-- ES PARA ELIMINAR
             res.setHeader("Content-Type", "application/json");
             const params = urlParsed.query
             const contentString = readFileSync(dataAnimales, "utf-8");
@@ -140,3 +139,5 @@ http.createServer((req, res) => {
 }).listen(puerto, () => {
     console.log(`Aplicación ejecutandose por el puerto ${puerto}`);
 })
+
+module.exports = { servidor, puerto }
